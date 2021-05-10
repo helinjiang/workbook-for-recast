@@ -19,8 +19,15 @@ ast.program.body[2] = b.variableDeclaration('const', [b.variableDeclarator(b.ide
 // let d;
 ast.program.body[3] = b.variableDeclaration('let', [b.variableDeclarator(b.identifier('d'), null)]);
 
+// const e1 = "41", e2 = "42";
+ast.program.body[4] = b.variableDeclaration('const', [
+  b.variableDeclarator(b.identifier('e1'), b.literal('41')),
+  b.variableDeclarator(b.identifier('e2'), b.literal('42')),
+]);
+
 // var a = 1;
 // let b = 2;
 // const c = "3";
 // let d;
+// const e1 = "41", e2 = "42";
 printByConsole(recast.print(ast).code, { tag: '修改之后' });
