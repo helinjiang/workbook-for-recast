@@ -7,7 +7,28 @@ module.exports = {
   plugins: [
     new SomePlugin({
       definedInstanceDir: './src/plugins/app',
+      options: {
+        activeInstance: 'dev.js',
+        doNotChangeMe: true,
+      },
+    }),
+
+    new SomePlugin({
+      definedInstanceDir: './src/plugins/app',
+      options: {
+        doNotChangeMe: true,
+      },
+    }),
+
+    new SomePlugin({
+      definedInstanceDir: './src/plugins/app',
       options: {},
     }),
+
+    new SomePlugin({
+      definedInstanceDir: './src/plugins/app',
+    }),
+
+    new SomePlugin(),
   ],
 };

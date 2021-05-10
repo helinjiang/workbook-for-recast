@@ -11,27 +11,8 @@ const b = recast.types.builders;
 
 recast.visit(ast, {
   visitNewExpression: function (nodePath) {
-    const node = nodePath.node;
-    console.log(nodePath.node);
-    console.log(recast.print(node).code);
 
-    const properties = nodePath.node.arguments['0'].properties;
-    properties.forEach((item, index) => {
-      console.log('----', index, item.key.name);
-      console.log(recast.print(item).code, '\n');
-
-      if (item.key.name === 'definedInstanceDir') {
-        item.value.value = item.value.value + '/just-a-demo.js';
-      } else if (item.key.name === 'options') {
-        if (!item.value.properties.length) {
-          console.log('options 为空!');
-        }
-
-        item.value.properties[0] = b.objectProperty(b.identifier('newAddedProperty'), b.literal('I am happy!'));
-      }
-    });
-
-    console.log(recast.print(node).code);
+    handleSomePlugin(nodePath.node);
 
     // It's your responsibility to call this.traverse with some
     // NodePath object (usually the one passed into the visitor
@@ -46,3 +27,71 @@ recast.visit(ast, {
     return false;
   },
 });
+
+printByConsole(recast.print(ast).code, { tag: '修改之后' });
+
+function handleSomePlugin(node) {
+  if (node.callee.name !== 'SomePlugin') {
+    return;
+  }
+
+  // console.log(node);
+  console.log(recast.print(node).code);
+
+  if (node.arguments.length) {
+    // 如果构造函数不为空
+    const properties = node.arguments['0'].properties;
+
+    // 判断 options 是否为空
+    let isExistOptions = false;
+
+    // 遍历属性
+    properties.forEach((topLevelProperty, index) => {
+      console.log('----', index, topLevelProperty.key.name);
+      console.log(recast.print(topLevelProperty).code, '\n');
+
+      if (topLevelProperty.key.name === 'definedInstanceDir') {
+        topLevelProperty.value.value = topLevelProperty.value.value + '/just-a-demo.js';
+      } else if (topLevelProperty.key.name === 'options') {
+        isExistOptions = true;
+
+        if (topLevelProperty.value.properties.length) {
+          // 如果不为 {} 空对象
+          const target = topLevelProperty.value.properties.find((i) => i.key.name === 'activeInstance');
+          if (target) {
+            // 如果存在对于的属性，则修改它
+            target.value = b.literal('new.js');
+          } else {
+            // 如果不存在对于的属性，则追加它
+            topLevelProperty.value.properties.push(b.objectProperty(b.identifier('activeInstance'), b.literal('new.js')));
+          }
+        } else {
+          // 如果为 {} 空对象，则追加之
+          topLevelProperty.value.properties.push(b.objectProperty(b.identifier('activeInstance'), b.literal('new.js')));
+        }
+      }
+    });
+
+    // 如果不存在 options 这个属性，则追加它
+    if (!isExistOptions) {
+      node.arguments['0'].properties.push(
+        b.objectProperty(b.identifier('options'), b.objectExpression([
+          b.objectProperty(b.identifier('activeInstance'), b.literal('new.js')),
+        ])),
+      );
+    }
+  } else {
+    // 对象的属性列表
+    // const properties = node.arguments['0'].properties;
+
+    // 如果构造函数为空，则直接创建一个
+    node.arguments.push(b.objectExpression([
+      b.objectProperty(b.identifier('options'), b.objectExpression([
+        b.objectProperty(b.identifier('activeInstance'), b.literal('new.js')),
+      ])),
+    ]));
+  }
+
+  // console.log(node);
+  console.log(recast.print(node).code);
+}
