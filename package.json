@@ -1,0 +1,22 @@
+{
+  "name": "workbook-for-recast",
+  "description": "练习 recast 来操作 AST 等",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helinjiang/workbook-for-recast.git"
+  },
+  "keywords": [
+    "workbook",
+    "recast"
+  ],
+  "author": "helinjiang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/helinjiang/workbook-for-recast/issues"
+  },
+  "homepage": "https://github.com/helinjiang/workbook-for-recast#readme"
+}
