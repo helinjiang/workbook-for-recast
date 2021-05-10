@@ -1,4 +1,5 @@
-const recast = require("recast");
+const recast = require('recast');
+const { printByConsole } = require('../utils');
 
 // Let's turn this function declaration into a variable declaration.
 const code = [
@@ -12,8 +13,7 @@ const code = [
 // Parse the code using an interface similar to require("esprima").parse.
 const ast = recast.parse(code);
 
-console.log(recast.print(ast).code);
-console.log('\n===========\n');
+printByConsole(recast.print(ast).code, { tag: '修改之前' });
 
 // Grab a reference to the function declaration we just parsed.
 const add = ast.program.body[0];
@@ -39,5 +39,4 @@ ast.program.body[0] = b.variableDeclaration('var', [
 // Just for fun, because addition is commutative:
 add.params.push(add.params.shift());
 
-console.log(recast.print(ast).code);
-console.log('\n===========\n');
+printByConsole(recast.print(ast).code, { tag: '修改之后' });
