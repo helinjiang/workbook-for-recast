@@ -1,6 +1,6 @@
-# 001 官方demo
+# 001 表达式和语句
 
-本 demo 根据 https://github.com/benjamn/recast 官方提供的示例稍作改动而来。
+生成表达式和语句。
 
 
 
