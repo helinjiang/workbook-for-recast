@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/helinjiang/workbook-for-recast/issues"
   },
-  "homepage": "https://github.com/helinjiang/workbook-for-recast#readme"
+  "homepage": "https://github.com/helinjiang/workbook-for-recast#readme",
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "recast": "^0.20.4"
+  }
 }
