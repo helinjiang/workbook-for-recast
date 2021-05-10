@@ -7,13 +7,31 @@ const ast = recast.parse(code);
 
 printByConsole(recast.print(ast).code, { tag: '修改之前' });
 
+const b = recast.types.builders;
+
 recast.visit(ast, {
   visitNewExpression: function (nodePath) {
     const node = nodePath.node;
     console.log(nodePath.node);
     console.log(recast.print(node).code);
 
-    // nodePath.node.arguments["0"].properties
+    const properties = nodePath.node.arguments['0'].properties;
+    properties.forEach((item, index) => {
+      console.log('----', index, item.key.name);
+      console.log(recast.print(item).code, '\n');
+
+      if (item.key.name === 'definedInstanceDir') {
+        item.value.value = item.value.value + '/just-a-demo.js';
+      } else if (item.key.name === 'options') {
+        if (!item.value.properties.length) {
+          console.log('options 为空!');
+        }
+
+        item.value.properties[0] = b.objectProperty(b.identifier('newAddedProperty'), b.literal('I am happy!'));
+      }
+    });
+
+    console.log(recast.print(node).code);
 
     // It's your responsibility to call this.traverse with some
     // NodePath object (usually the one passed into the visitor
